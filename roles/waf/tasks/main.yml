@@ -25,6 +25,25 @@
   command: firewall-cmd --reload
 
 # -----------------------------
+# Routing & Masquerade (Gateway Role)
+# -----------------------------
+- name: Enable IP Forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Enable Masquerade
+  ansible.posix.firewalld:
+    masquerade: yes
+    permanent: yes
+    immediate: yes
+    state: enabled
+    zone: public
+
+# -----------------------------
 # TLS cert 준비 (없으면 self-signed 생성)
 # -----------------------------
 - name: Check cert/key exist
